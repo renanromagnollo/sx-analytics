@@ -26,7 +26,12 @@ export function UploadForm() {
       const response = await uploadReportAction(formData);
 
       if (response.success) {
-        toast.success("Arquivo enviado com sucesso.");
+        toast.success(
+          `
+          ${response.importedRows} linhas importadas.
+          ${response.invalidRows} linhas inválidas.
+          `
+        );
       } else {
         toast.error(response.error);
       }

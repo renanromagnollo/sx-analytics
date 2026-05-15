@@ -1,8 +1,10 @@
 import {
   pgTable,
+  uuid,
+  integer,
   text,
   timestamp,
-  uuid,
+  varchar,
 } from "drizzle-orm/pg-core";
 
 import { salons } from "./salons";
@@ -10,25 +12,21 @@ import { salons } from "./salons";
 export const uploads = pgTable("uploads", {
   id: uuid("id").defaultRandom().primaryKey(),
 
-  salonId: uuid("salon_id")
+  salonId: uuid("salonId")
     .references(() => salons.id)
     .notNull(),
 
-  fileName: text("file_name").notNull(),
+  fileName: varchar("fileName", { length: 255 }).notNull(),
 
-  fileType: text("file_type").notNull(),
+  status: varchar("status", { length: 50 }).notNull(),
 
-  status: text("status")
-    .$type<
-      "PENDING" |
-      "PROCESSING" |
-      "SUCCESS" |
-      "ERROR"
-    >()
-    .default("PENDING")
-    .notNull(),
+  importedRows: integer("importedRows").default(0).notNull(),
 
-  uploadedAt: timestamp("uploaded_at")
-    .defaultNow()
-    .notNull(),
+  invalidRows: integer("invalidRows").default(0).notNull(),
+
+  errorMessage: text("errorMessage"),
+
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+
+  finishedAt: timestamp("finishedAt"),
 });

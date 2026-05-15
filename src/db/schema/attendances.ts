@@ -1,13 +1,13 @@
 import {
-  numeric,
   pgTable,
-  text,
-  timestamp,
   uuid,
+  text,
+  numeric,
+  timestamp,
 } from "drizzle-orm/pg-core";
 
-import { professionals } from "./professionals";
 import { salons } from "./salons";
+import { professionals } from "./professionals";
 
 export const attendances = pgTable("attendances", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -27,15 +27,10 @@ export const attendances = pgTable("attendances", {
     scale: 2,
   }).notNull(),
 
-  commissionAmount: numeric("commission_amount", {
-    precision: 10,
-    scale: 2,
-  }),
+  attendanceDate: timestamp("attendance_date").notNull(),
 
-  attendanceDate: timestamp("attendance_date")
-    .notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 
-  createdAt: timestamp("created_at")
-    .defaultNow()
-    .notNull(),
+  // 🔥 ID de idempotência (ESSENCIAL)
+  importedKey: text("imported_key").unique(),
 });
